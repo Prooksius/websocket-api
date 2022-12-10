@@ -29,17 +29,16 @@ class RequestDispatcher
   }
 
   private function cleanData($data) {
-      if (is_array($data)) {
-          foreach ($data as $key => $value) {
-              unset($data[$key]);
-
-              $data[self::cleanData($key)] = $this->cleanData($value);
-          }
-      } else {
-          $data = htmlspecialchars($data, ENT_COMPAT, 'UTF-8');
+    if (is_array($data)) {
+      foreach ($data as $key => $value) {
+        unset($data[$key]);
+        $data[self::cleanData($key)] = $this->cleanData($value);
       }
+    } else {
+      $data = htmlspecialchars($data, ENT_COMPAT, 'UTF-8');
+    }
 
-      return $data;
+    return $data;
   }
 
   private function checkRequestsPerMinute(TcpConnection $connection) 
@@ -67,7 +66,12 @@ class RequestDispatcher
       } else {
         $this->exeeds[$id] = 1;
       }
-      $connection->close('Количество запросов в минуту (' . $this->requests_per_minute . ') превышено');
+
+      $error = [
+        'status' => 'error',
+        'message' => 'Количество запросов в минуту (' . $this->requests_per_minute . ') превышено',
+      ];
+      $connection->close(json_encode($error, JSON_UNESCAPED_UNICODE));
     }
   }
 
@@ -77,7 +81,11 @@ class RequestDispatcher
 
     if (isset($this->bans[$id])) {
       if (time() - $this->bans[$id] < 600) {
-        $connection->close('Вы заблокированы за превышение максимального количества запросов в минуту');
+        $error = [
+          'status' => 'error',
+          'message' => 'Вы заблокированы за превышение максимального количества запросов в минуту',
+        ];
+        $connection->close(json_encode($error, JSON_UNESCAPED_UNICODE));
       } else {
         unset($this->bans[$id]);
       }
