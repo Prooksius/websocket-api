@@ -1,0 +1,21 @@
+{
+	"name": "prook/websocket-api",
+	"description": "Websocket API",
+	"type": "project",
+	"require": {
+		"workerman/workerman": "^4.1",
+		"workerman/mysql": "^1.0",
+		"lcobucci/jwt": "^3.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"WebsocketApi\\": "./server/"
+		}
+	},
+	"authors": [
+		{
+			"name": "Prooksius",
+			"email": "prooksius@gmail.com"
+		}
+	]
+}
