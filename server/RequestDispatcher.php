@@ -14,6 +14,7 @@ class RequestDispatcher
     'bot' => 'WebsocketApi\handlers\Bot',
     'country' => 'WebsocketApi\handlers\Country',
     'customer' => 'WebsocketApi\handlers\Customer',
+    'cryptocoin_price' => 'WebsocketApi\handlers\CryptocoinPrice',
   ];
 
   private $requests_per_minute = 200;
